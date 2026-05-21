@@ -2,7 +2,7 @@ import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
 
 // Debug: Log environment variables at startup
-console.log("Cloudinary Config Loading:")
+console.log(" Cloudinary Config Loading:")
 console.log("  CLOUDINARY_CLOUD_NAME:", process.env.CLOUDINARY_CLOUD_NAME || "[MISSING]")
 console.log("  CLOUDINARY_API_KEY:", process.env.CLOUDINARY_API_KEY ? "[SET]" : "[MISSING]")
 console.log("  CLOUDINARY_API_SECRET:", process.env.CLOUDINARY_API_SECRET ? "[SET]" : "[MISSING]")

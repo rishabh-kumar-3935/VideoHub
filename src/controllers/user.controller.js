@@ -23,7 +23,7 @@ const generatAccessAndRefreshTokens = async (userId) => {
 
 const registerUser = asyncHandler(async (req,res)=> {
    //get user details from frontend
-   // validation -not empty
+   //validation -not empty
    //check if user already exists: username or , email
    //check for images,check for avatar
    //upload then to cloudinary, avatar
