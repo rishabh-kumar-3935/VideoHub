@@ -8,7 +8,7 @@ import { commentModel as Comment } from "../models/comment.model.js";
 const getNotifications = asyncHandler(async(req ,res)=>
 {
     const userId = req.user._id;
-    const notification=await Notification.find({user:userId})
+    const notifications = await Notification.find({user:userId})
     .populate("fromUser","username fullName avatar")
     .populate({path: "video",model:"Video",select:"title thumbnail"})
     .populate({path:"comment",model:"commentModel",select:"content"})
