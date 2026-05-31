@@ -1,14 +1,31 @@
 import express from "express"
-import cors from "cors"
 import cookieParser from "cookie-parser"
  
-
 const app = express();
 
-app.use(cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true
-}))
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) || [];
+const isOriginAllowed = (origin) => {
+  if (!origin) return false;
+  const normalizedOrigin = origin.trim();
+  const isLocalhostOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin);
+  return allowedOrigins.includes(normalizedOrigin) || isLocalhostOrigin;
+};
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && isOriginAllowed(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization,Accept,Origin,X-Requested-With");
+  }
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
 
 app.use(express.json({limit: "50kb"}))
 app.use(express.urlencoded({ extended: true, limit: "50kb" }))
@@ -22,8 +39,8 @@ import healthcheckerRouter from "./routes/healthcheck.routes.js";
 import tweetRouter from "./routes/tweet.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js"
 import videoRouter from "./routes/video.routes.js";
-import commentRouter from "./routes/like.routes.js";
-import likeRouter from "./routes/playlist.routes.js";
+import commentRouter from "./routes/comment.routes.js";
+import likeRouter from "./routes/like.routes.js";
 import playlistRouter from "./routes/playlist.routes.js"
 import dashboardRouter from "./routes/dashboard.routes.js"
 import watchHistoryRouter from "./routes/watchHistory.routes.js"
@@ -35,7 +52,6 @@ import notificationRouter from "./routes/notification.routes.js"
 
 //routes declaration
 app.use("/api/v1/users",userRouter)
-export default app
 app.use("/api/v1/healthcheck",healthcheckerRouter);
 app.use("/api/v1/tweets",tweetRouter);
 app.use("/api/v1/subscriptions",subscriptionRouter);
@@ -47,6 +63,20 @@ app.use("/api/v1/dashboard",dashboardRouter);
 app.use("/api/v1/history",watchHistoryRouter);
 app.use("/api/v1/search",searchRouter);
 app.use("/api/v1/notifications",notificationRouter);
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  const statusCode = err.statusCode || err.status || err.code || 500;
+  const message = err.message || "Internal Server Error";
+  const success = statusCode < 400;
+
+  res.status(statusCode).json({
+    statusCode,
+    success,
+    message,
+    data: err.data || null,
+  });
+});
 
 export default app;
 export {app}

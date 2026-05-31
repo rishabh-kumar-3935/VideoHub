@@ -2,11 +2,11 @@ import {Router} from 'express';
 import {
      createPlaylist,
     getUserPlaylists,
-    getUserPlaylists,
     addVideoToPlaylist,
     removeVideoFromPlaylist,
     deletePlaylist,
-    updatePlaylist
+    updatePlaylist,
+    getPlaylistById
 } from "../controllers/playlist.controller.js";
 
 import { verifyJWT } from '../middlewares/auth.middleware.js';

@@ -2,8 +2,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { Video as Video } from "../models/video.model.js";
-import { User } from "../models/users.model.js";
-import { tweetModel as Tweet } from "../models/tweet.model.js";
+import { User } from "../models/user.model.js";
+import { Tweet } from "../models/tweet.model.js";
 
 const searchVideos = asyncHandler(async (req ,res)=>{
     const {q, page =1, limit =10, sort = "relevance"}=req.query;

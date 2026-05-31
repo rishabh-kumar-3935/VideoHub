@@ -3,6 +3,11 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2"
 
 const videoSchema = new Schema(
     {
+      title: {
+        type: String,
+        required: true,
+        trim: true,
+      },
       videoFile:{
         type:String ,// cloudinary url
         required:true
@@ -22,6 +27,13 @@ const videoSchema = new Schema(
       views:{
         type:Number,
         default:0
+      },
+      viewedBy: {
+        type: [{
+          type: Schema.Types.ObjectId,
+          ref: "User"
+        }],
+        default: []
       },
       isPublished:{
         type: Boolean,

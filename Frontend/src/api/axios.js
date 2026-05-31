@@ -4,7 +4,7 @@ export const getSecureUrl=(url)=>{
     return url.replace("http://","https://");
 };
 const axiosInstance=axios.create({
-    baseURL:import.meta.env.VITE_BACKEND_URL,
+    baseURL:import.meta.env.VITE_BACKEND_URL + "/api/v1",
     withCredentials:true,
 });
 
@@ -24,7 +24,7 @@ axiosInstance.interceptors.response.use(
         if(error.response?.status==401 && !originalRequest._retry){
             originalRequest._retry=true;
             try{
-                await axiosInstance.post("/user/refresh-token")
+                await axiosInstance.post("/users/refresh-token")
                 return axiosInstance(originalRequest);
                 
             }catch(err){

@@ -664,9 +664,9 @@ function Dashboard() {
       {updating && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[200]">
           <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
             <p className="font-black text-white italic tracking-widest uppercase text-[10px]">
-              Processing Pulse...
+              Processing ...
             </p>
           </div>
         </div>

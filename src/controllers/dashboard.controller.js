@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { Video } from "../models/video.model.js";
-import { subscriptionModel as Subscription } from "../models/subscription.model.js";
-import { likeModel as Like } from "../models/like.model.js";
-import { commentModel as Comment } from "../models/comment.model.js";
+import { Subscription } from "../models/subscription.model.js";
+import { Like } from "../models/like.model.js";
+import { Comment } from "../models/comment.model.js";
 import { Notification } from "../models/notification.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
@@ -40,7 +40,7 @@ const getDashboardDate= asyncHandler(async(req , res)=>{
 
     const channelsSubscribedTo = await Subscription.countDocuments({
         subscriber:userObjectId,
-    }),
+    });
 
     const statsData= statsAgg[0] || {};
     const stats={
@@ -100,3 +100,4 @@ const getDashboardDate= asyncHandler(async(req , res)=>{
 
 });
 export {getDashboardDate};
+export const getDashboardData = getDashboardDate;

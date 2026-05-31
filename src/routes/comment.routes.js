@@ -10,14 +10,13 @@ import{
 import { verifyJWT } from '../middlewares/auth.middleware.js'
 
 const router = Router();
-router.use(verifyJWT);
 
 router.route("/:videoId")
-.get(getVideoComment)
-.post(addComment);
+.get(getVideoComments)
+.post(verifyJWT, addComment);
 
 router.route("/c/:commentId")
-.delete(deleteComment)
-.post(addComment);
+.patch(verifyJWT, updateComment)
+.delete(verifyJWT, deleteComment);
 
 export default router;

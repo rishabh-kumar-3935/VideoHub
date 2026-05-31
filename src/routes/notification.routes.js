@@ -5,14 +5,13 @@ import{
     markNotificationRead,
     deleteNotification
 } from "../controllers/notification.controller.js";
-import { verify } from 'jsonwebtoken';
 import { verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 router.use(verifyJWT);
 
 router.route("/").get(getNotifications);
-router.route("/read/:notificationId").patch(markNotificationsRead);
+router.route("/read/:notificationId").patch(markNotificationRead);
 router.route("/read-all").patch(markAllNotificationsRead);
 router.route("/:notificationId").delete(deleteNotification);
 

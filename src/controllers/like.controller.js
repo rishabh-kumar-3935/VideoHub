@@ -5,7 +5,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
 import { Notification } from "../models/notification.model.js";
 import { Video } from "../models/video.model.js";
-import { commentModel as Comment } from "../models/comment.model.js";
+import { Comment } from "../models/comment.model.js";
 
 const createLikeNotification= async({userId,targetUserId,type,videoId,commentId})=>{
     if(userId.toString()===targetUserId.toString())return;
@@ -24,12 +24,13 @@ const toggleVideoLike = asyncHandler(async(req ,res)=>{
     const {videoId}=req.params
     if(!isValidObjectId(videoId))throw new ApiError(404,"Invalid Video Id");
 
-    const video=Video.findById(videoId);
-    if(!video)throw new ApiError(404,"video not found");
+    const video = await Video.findById(videoId);
+    if(!video) throw new ApiError(404,"video not found");
 
     const alreadyLiked=await Like.findOne({video: videoId,likedBy: req.user?._id});
 
-    if(alreadyLiked){await Like.findOneAndDelete(alreadyLiked._id);
+    if(alreadyLiked){
+        await Like.findByIdAndDelete(alreadyLiked._id);
         return res
         .status(200)
         .json(new ApiResponse(200,{ isLiked:false}, "Unliked"));
@@ -53,14 +54,14 @@ const toggleCommentLike = asyncHandler(async(req,res)=>{
     const userId = req.user._id;
  if (!mongoose.isValidObjectId(commentId)) throw new ApiError(400, "Invalid comment ID");
 
- const existing = await Like.findOne({comment: commentId,likeBy:userId});
+ const existing = await Like.findOne({comment: commentId, likedBy: userId});
 
  if(existing){
     await existing.deleteOne();
     return res.status(200).json(new ApiResponse(200,{isLiked:false},"comment unliked successfully"));
  }
     
- const like = await Like.create({comment: commentId,likeBy:userId});
+ const like = await Like.create({comment: commentId, likedBy: userId});
  const comment = await Comment.findById(commentId);
  if(comment){
     await createLikeNotification({

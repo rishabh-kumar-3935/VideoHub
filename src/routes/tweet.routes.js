@@ -1,6 +1,6 @@
 import {Router} from 'express'
-import { verifyJWT
- } from '../middlewares/auth.middleware.js'
+import { verifyJWT } from '../middlewares/auth.middleware.js'
+import { upload } from '../middlewares/multer.middleware.js'
 
  import{
     createTweet,
@@ -13,12 +13,10 @@ import { verifyJWT
  const router=Router();
  router.use(verifyJWT);
 
- router.route("/").post(
-    upload.single("image"),
-    createTweet
+router.route("/").post(
+   upload.single("image"),
+   createTweet
  );
-
- router.route("/").post(createTweet);
  router.route("/user/:userId").get(getUserTweets);
  router.route("/:tweetId").patch(updateTweet).delete(deleteTweet);
  router.route("/remove-image/:tweetId").patch(deleteTweetImage);

@@ -4,7 +4,7 @@ import { ApiError } from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { uploadOnCloudinary ,deleteFromCloudinary} from "../utils/cloudinary.js";
-import { User } from "../models/users.model.js";
+import { User } from "../models/user.model.js";
 
 // 1. Get all videos with optimized search and filters
 const getAllVideos = asyncHandler(async (req, res) => {
@@ -88,42 +88,39 @@ const publishAVideo = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Title and description are required");
     }
 
-    const videoFileLocalPath = req.files?.videoFile?.[0]?.path;
+    const videoFileLocalPath = req.files?.videoFile?.[0]?.path || req.files?.videosFile?.[0]?.path;
     const thumbnailLocalPath = req.files?.thumbnail?.[0]?.path;
 
     if (!videoFileLocalPath) throw new ApiError(400, "Video file is missing");
     if (!thumbnailLocalPath) throw new ApiError(400, "Thumbnail is missing");
 
+    let videoFile, thumbnail;
     try {
-        // 🔥 Parallel Upload: Dono files ek saath upload hongi (Fast!)
-        const [videoFile, thumbnail] = await Promise.all([
+        [videoFile, thumbnail] = await Promise.all([
             uploadOnCloudinary(videoFileLocalPath),
-            uploadOnCloudinary(thumbnailLocalPath)
+            uploadOnCloudinary(thumbnailLocalPath),
         ]);
-
-        // 🔥 Strict Check: Dono ka hona zaroori hai
-        if (!videoFile || !thumbnail) {
-            throw new ApiError(400, "Upload failed. Please try again with a smaller file or better connection.");
-        }
-
-        const video = await Video.create({
-            videoFile: videoFile.secure_url, // Use secure_url for HTTPS
-            thumbnail: thumbnail.secure_url,
-            title,
-            description,
-            duration: videoFile.duration || 0,
-            owner: req.user?._id,
-            isPublished: true,
-        });
-
-        return res
-            .status(201)
-            .json(new ApiResponse(201, video, "Video published successfully"));
-
     } catch (error) {
-        // Agar yahan error aata hai toh hamara Cloudinary util cleanup handle kar hi lega
         throw new ApiError(500, error?.message || "Internal Server Error while publishing video");
     }
+
+    if (!videoFile || !thumbnail) {
+        throw new ApiError(400, "Upload failed. Please try again with a smaller file or better connection.");
+    }
+
+    const video = await Video.create({
+        videoFile: videoFile.secure_url, // Use secure_url for HTTPS
+        thumbnail: thumbnail.secure_url,
+        title,
+        description,
+        duration: videoFile.duration || 0,
+        owner: req.user?._id,
+        isPublished: true,
+    });
+
+    return res
+        .status(201)
+        .json(new ApiResponse(201, video, "Video published successfully"));
 });
 
 // 3. Get Video By ID with SMART UNIQUE VIEWS logic
@@ -140,8 +137,10 @@ const getVideoById = asyncHandler(async (req, res) => {
 
   // 1. UNIQUE VIEWS LOGIC
   if (userId) {
-    const isOwner = videoData.owner.toString() === userId.toString();
-    const hasNotViewed = !videoData.viewedBy.includes(userId);
+    const isOwner = videoData.owner?.toString() === userId.toString();
+    const hasNotViewed = !Array.isArray(videoData.viewedBy)
+      ? true
+      : !videoData.viewedBy.some((id) => id.toString() === userId.toString());
 
     if (!isOwner && hasNotViewed) {
       await Video.findByIdAndUpdate(videoId, {
@@ -165,7 +164,7 @@ const getVideoById = asyncHandler(async (req, res) => {
     { $match: { _id: new mongoose.Types.ObjectId(videoId) } },
     {
       $lookup: {
-        from: "likemodels",
+        from: "likes",
         localField: "_id",
         foreignField: "video",
         as: "likes",
@@ -180,7 +179,7 @@ const getVideoById = asyncHandler(async (req, res) => {
         pipeline: [
           {
             $lookup: {
-              from: "subscriptionmodels",
+              from: "subscriptions",
               localField: "_id",
               foreignField: "channel",
               as: "subscribers",

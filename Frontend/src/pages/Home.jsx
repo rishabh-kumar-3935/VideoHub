@@ -10,8 +10,16 @@ function Home() {
     axiosInstance
       .get("/videos")
       .then((res) => {
-        const fetchedVideos = res.data.data.docs || res.data.data || [];
-        setVideos(fetchedVideos);
+        const fetchedVideos =
+          res?.data?.data?.docs || res?.data?.data || res?.data?.docs || [];
+
+        if (!Array.isArray(fetchedVideos)) {
+          console.error("Home fetch error: unexpected response shape", res?.data);
+          setVideos([]);
+        } else {
+          setVideos(fetchedVideos);
+        }
+
         setLoading(false);
       })
       .catch((err) => {

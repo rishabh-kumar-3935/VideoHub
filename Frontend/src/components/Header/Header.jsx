@@ -90,20 +90,31 @@ function Header() {
         
         {/* 1. Logo Section */}
         <Link to='/' className='flex items-center gap-3 shrink-0 h-12'>
-            <div className='relative w-10 h-10 flex items-center justify-center'>
-                <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">
-                    <defs>
-                        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#3b82f6" /><stop offset="100%" stopColor="#1d4ed8" />
-                        </linearGradient>
-                    </defs>
-                    <path d="M28 15C28 12.2386 30.2386 10 33 10H65C79.9117 10 92 22.0883 92 37C92 51.9117 79.9117 64 65 64H43V85C43 87.7614 40.7614 90 38 90C35.2386 90 33 87.7614 33 85V15H28Z" fill="url(#blueGrad)"/>
-                    <path d="M52 28L70 37L52 46V28Z" fill="white" />
-                </svg>
-            </div>
+            <div className="relative w-10 h-10 flex items-center justify-center">
+  <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+    <defs>
+      <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"  />
+        <stop offset="100%" stopColor="#1ca332" />
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="44" fill="url(#greenGrad)" />
+    <path
+      d="M38 30 L68 50 L38 70 Z"
+      fill="white"
+      transform="translate(-2 0)"
+    />
+    <path
+      d="M55 28 L55 72"
+      stroke="white"
+      strokeWidth="8"
+      strokeLinecap="round"
+    />
+  </svg>
+</div>
             <div className='hidden sm:flex flex-col justify-center'> 
                 <h1 className='text-[20px] font-black tracking-tighter leading-none text-white'>
-                    PULSE<span className='text-blue-500 ml-1'>PLAY</span>
+                    PLAY<span className='text-green-500 ml-1'>COMMUNITY</span>
                 </h1>
             </div>
         </Link>
@@ -113,8 +124,8 @@ function Header() {
           <div className="relative">
             <input
               type="text"
-              className="w-full bg-[#121212] border border-white/5 rounded-2xl py-2.5 px-12 outline-none focus:border-blue-500/50 text-sm text-white placeholder:text-zinc-700"
-              placeholder="Search Pulse..."
+              className="w-full bg-[#121212] border border-white/5 rounded-2xl py-2.5 px-12 outline-none focus:border-green-500/50 text-sm text-white placeholder:text-zinc-700"
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -178,7 +189,7 @@ function Header() {
                 Login
               </Link>
               <Link to="/signup" className="bg-blue-600 text-white px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-blue-500 shadow-lg active:scale-95 transition-all">
-                Join Now
+                SIGN UP
               </Link>
             </div>
           )}

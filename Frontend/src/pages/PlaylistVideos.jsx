@@ -70,7 +70,7 @@ function PlaylistVideos() {
         }
     };
 
-    if (loading) return <div className="h-screen bg-[#050505] flex items-center justify-center text-zinc-700 font-black italic tracking-[0.3em] animate-pulse uppercase text-xs">Syncing Pulse...</div>;
+    if (loading) return <div className="h-screen bg-[#050505] flex items-center justify-center text-zinc-700 font-black italic tracking-[0.3em] animate-pulse uppercase text-xs">Syncing ...</div>;
 
     const validVideos = playlist?.videos?.filter(v => v !== null) || [];
 
@@ -136,7 +136,7 @@ function PlaylistVideos() {
                                 </div>
                                 <div className="flex gap-3 mt-2">
                                     <button type="submit" className="flex-1 bg-white text-black py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-blue-50 shadow-xl transition-all flex items-center justify-center gap-2">
-                                        <Save size={14}/> Save pulse
+                                        <Save size={14}/> Save 
                                     </button>
                                     <button type="button" onClick={() => setIsEditing(false)} className="px-8 bg-zinc-800 py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all">Cancel</button>
                                 </div>
@@ -174,7 +174,7 @@ function PlaylistVideos() {
                         <div className="p-6 bg-zinc-900/50 rounded-full mb-6">
                             <AlertCircle size={40} className="text-zinc-700" />
                         </div>
-                        <p className="text-zinc-600 font-black uppercase tracking-[0.4em] text-xs italic">Pulse library is empty</p>
+                        <p className="text-zinc-600 font-black uppercase tracking-[0.4em] text-xs italic">library is empty</p>
                         <p className="text-zinc-800 text-[10px] mt-2 font-bold uppercase tracking-widest">Add videos to see them here</p>
                     </div>
                 )}

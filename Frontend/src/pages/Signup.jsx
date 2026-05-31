@@ -127,34 +127,30 @@ function Signup() {
             <div className="absolute inset-0 bg-blue-600 rounded-2xl blur-xl opacity-30"></div>
 
             {/* The Icon: Abstract Play + Pulse P (Geometric Design) */}
-            <svg
-              viewBox="0 0 100 100"
-              className="relative w-full h-full drop-shadow-2xl"
-            >
-              <defs>
-                <linearGradient
-                  id="logoGrad"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="100%"
-                >
-                  <stop offset="0%" stopColor="#3b82f6" />
-                  <stop offset="100%" stopColor="#1d4ed8" />
-                </linearGradient>
-              </defs>
-              {/* Smooth P-Shape Play Button */}
-              <path
-                d="M35 25C35 22.2386 37.2386 20 40 20H60C71.0457 20 80 28.9543 80 40C80 51.0457 71.0457 60 60 60H45V75C45 77.7614 42.7614 80 40 80C37.2386 80 35 77.7614 35 75V25Z"
-                fill="url(#logoGrad)"
-              />
-              {/* Inner Play Triangle */}
-              <path d="M52 35L62 40L52 45V35Z" fill="white" />
-            </svg>
+            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+    <defs>
+      <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"  />
+        <stop offset="100%" stopColor="#1ca332" />
+      </linearGradient>
+    </defs>
+    <circle cx="50" cy="50" r="44" fill="url(#greenGrad)" />
+    <path
+      d="M38 30 L68 50 L38 70 Z"
+      fill="white"
+      transform="translate(-2 0)"
+    />
+    <path
+      d="M55 28 L55 72"
+      stroke="white"
+      strokeWidth="8"
+      strokeLinecap="round"
+    />
+  </svg>
           </div>
 
           <h2 className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-none flex items-center italic">
-            PULSE<span className="text-blue-500 ml-1">PLAY</span>
+            PLAY<span className="text-green-500 ml-1">COMMUNITY</span>
           </h2>
           <p className="text-zinc-600 text-[9px] font-bold uppercase tracking-[0.4em] mt-2 italic">
             Premium Studio Creator Hub Registration
@@ -176,8 +172,8 @@ function Signup() {
               </label>
               <input
                 type="text"
-                placeholder="Pulse creator name"
-                className="w-full bg-black/40 border border-white/5 p-4 rounded-2xl focus:border-blue-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700"
+                placeholder="name...."
+                className="w-full bg-black/40 border border-white/5 p-4 rounded-2xl focus:border-green-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700"
                 onChange={(e) =>
                   setFormData({ ...formData, fullName: e.target.value })
                 }
@@ -191,7 +187,7 @@ function Signup() {
               <input
                 type="text"
                 placeholder="unique_handle"
-                className={`w-full bg-black/40 border p-4 rounded-2xl focus:border-blue-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700 ${
+                className={`w-full bg-black/40 border p-4 rounded-2xl focus:border-green-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700 ${
                   error.toLowerCase().includes("username") ? "border-red-500/50" : "border-white/5"
                 }`}
                 onChange={(e) =>
@@ -209,7 +205,7 @@ function Signup() {
             <input
               type="email"
               placeholder="you@example.com"
-              className={`w-full bg-black/40 border p-4 rounded-2xl focus:border-blue-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700 ${
+              className={`w-full bg-black/40 border p-4 rounded-2xl focus:border-green-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700 ${
                 error.toLowerCase().includes("email") ? "border-red-500/50" : "border-white/5"
               }`}
               onChange={(e) =>
@@ -236,7 +232,7 @@ function Signup() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Min. 8 characters"
                 autoComplete="new-password"
-                className="w-full bg-black/40 border border-white/5 p-4 pr-12 rounded-2xl focus:border-blue-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700"
+                className="w-full bg-black/40 border border-white/5 p-4 pr-12 rounded-2xl focus:border-green-600/50 outline-none transition-all text-sm font-medium text-white placeholder:text-zinc-700"
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
@@ -316,13 +312,13 @@ function Signup() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-black hover:bg-zinc-200 py-4.5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.2em] mt-6 shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 group disabled:opacity-50"
+            className="w-full h-9 bg-white text-black hover:bg-zinc-200 py-4.5 rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.2em] mt-6 shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2 group disabled:opacity-50"
           >
             {loading ? (
               <Loader2 className="animate-spin" size={18} />
             ) : (
               <>
-                Join the Pulse{" "}
+                Join the PLAYCOMMUNITY{" "}
                 <ArrowRight
                   size={14}
                   className="group-hover:translate-x-1 transition-transform"
@@ -337,9 +333,9 @@ function Signup() {
             Member already?{" "}
             <Link
               to="/login"
-              className="text-blue-500 hover:text-blue-400 ml-1"
+              className="text-green-500 hover:text-green-400 ml-1"
             >
-              Login pulse
+              Login TO PLAYCOMMUNITY
             </Link>
           </p>
         </div>

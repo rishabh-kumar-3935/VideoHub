@@ -70,7 +70,7 @@ function Sidebar() {
             {({ isActive }) => (
               <>
                 {isActive && (
-                  <div className="absolute left-0 w-1 h-5 bg-blue-500 rounded-r-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
+                  <div className="absolute left-0 w-1 h-5 bg-green-500 rounded-r-full shadow-[0_0_10px_rgba(59,130,246,0.8)]"></div>
                 )}
 
                 <span
@@ -113,7 +113,7 @@ function Sidebar() {
                       src={getSecureUrl(channel.avatar)}
                       className={`w-8 h-8 rounded-full object-cover border transition-all ${
                         isActive
-                          ? "border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+                          ? "border-green-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
                           : "border-white/10 group-hover:border-white/30"
                       }`}
                       alt={channel.fullName}
@@ -130,7 +130,7 @@ function Sidebar() {
 
                     {/* Active Dot indicator */}
                     {isActive && (
-                      <div className="ml-auto w-1.5 h-1.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,1)]"></div>
+                      <div className="ml-auto w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,1)]"></div>
                     )}
                   </>
                 )}

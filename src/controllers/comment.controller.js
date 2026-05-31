@@ -1,8 +1,9 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import {Comment} from "../models/comment.model.js"
-import {ApiError} from "../utlis/ApiError.js"
-import {ApiResponse} from "../utlis/ApiResponse.js"
-import {asyncHandler} from "../utlis/asyncHandler.js"
+import {Video} from "../models/video.model.js"
+import {ApiError} from "../utils/ApiError.js"
+import {ApiResponse} from "../utils/ApiResponse.js"
+import {asyncHandler} from "../utils/asyncHandler.js"
 import { Notification} from "../models/notification.model.js";
 const getVideoComments = asyncHandler(async(req ,res) => {
     const {videoId} =req.params
@@ -38,7 +39,7 @@ const getVideoComments = asyncHandler(async(req ,res) => {
                 likesCount:{$size:"$likes"},
                 isLiked:{
                     $cond:{
-                        if:{$in:[new mongoose.Types.ObjectId(userId),"$likes.likeBy"]},
+                        if:{$and:[{$ne:[userId,null]},{$in:[new mongoose.Types.ObjectId(userId),"$likes.likeBy"]}]},
                         then:true,
                         else:false
                     }
@@ -64,12 +65,12 @@ const addComment = asyncHandler(async(req,res)=>{
     const {videoId}=req.params;
     const {content}=req.body;
 
-    if(!content)throw ApiError(400,"Content is required");
+    if(!content)throw new ApiError(400,"Content is required");
 
-    if(!isValidObjectId(videoId))throw new ApiError(400,"invalid videoId");
+    if(!isValidObjectId(videoId))throw new ApiError(400,"Invalid videoId");
    
     const video = await Video.findById(videoId);
-    if(!videoId)throw new ApiError(404,"Video not found");
+    if(!video)throw new ApiError(404,"Video not found");
 
     const comment = await Comment.create({
         content,

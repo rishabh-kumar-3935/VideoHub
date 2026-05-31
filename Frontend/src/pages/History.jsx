@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import axiosInstance from '../api/axios'
 import { Trash2, X, Clock, PlayCircle, ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast' 
 
 function History() {
+    const { userData } = useSelector((state) => state.auth)
     const [history, setHistory] = useState([])
     const [loading, setLoading] = useState(true)
 
     const fetchHistory = async () => {
         try {
             const res = await axiosInstance.get("/users/history")
-            setHistory(res.data.data || [])
+            const raw = res.data.data
+            const normalizedHistory = Array.isArray(raw)
+                ? raw
+                : Array.isArray(raw?.history)
+                    ? raw.history.map(item => item.video || item)
+                    : []
+            setHistory(normalizedHistory)
         } catch (err) {
             console.error("Fetch history error:", err)
         } finally {
@@ -20,33 +28,19 @@ function History() {
     }
 
     const handleClearHistory = async () => {
-        if (!window.confirm("Clear all watch history? This cannot be undone.")) return;
-        
-        const clearToast = toast.loading("Clearing your journey...") 
-        try {
-            await axiosInstance.post("/users/clear-history")
-            setHistory([])
-            toast.success("History Cleared! ", { id: clearToast })  
-        } catch (err) {
-            toast.error("Failed to clear history", { id: clearToast }) 
-        }
+        toast.error("Clear history feature coming soon!")  
     }
 
     const handleRemoveFromHistory = async (e, videoId) => {
         e.preventDefault(); 
         e.stopPropagation(); 
-        try {
-            await axiosInstance.delete(`/users/history/${videoId}`)
-            setHistory(prev => prev.filter(v => v._id !== videoId))
-            toast.success("Removed from history")  
-        } catch (err) {
-            toast.error("Could not remove video") 
-        }
+        toast.error("Remove from history feature coming soon!")
     }
 
     useEffect(() => {
+        if (!userData?._id) return
         fetchHistory()
-    }, [])
+    }, [userData])
 
     return (
         <div className='max-w-5xl mx-auto p-4 md:p-8 text-left min-h-screen text-white pb-32'>
@@ -58,7 +52,7 @@ function History() {
                     </div>
                     <div>
                         <h1 className='text-3xl md:text-4xl font-black italic tracking-tighter'>Watch history</h1>
-                        <p className='text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1 italic'>Your pulse journey so far</p>
+                        <p className='text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1 italic'>Your journey so far</p>
                     </div>
                 </div>
                 

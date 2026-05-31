@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/asyncHandler.js";
+import mongoose from "mongoose";import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
@@ -6,7 +6,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken"
 
 
-const generatAccessAndRefreshTokens = async (userId) => {
+const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId)
     const accessToken = user.generateAccessToken()
@@ -22,20 +22,15 @@ const generatAccessAndRefreshTokens = async (userId) => {
 }
 
 const registerUser = asyncHandler(async (req,res)=> {
-   //get user details from frontend
-   //validation -not empty
-   //check if user already exists: username or , email
-   //check for images,check for avatar
-   //upload then to cloudinary, avatar
-   //create user object - creat entry in db
-   // remov epassword and rfresh 5token field from response
-   // check for user creation\
-   // return res
+   const {fullName,email,username, password}=req.body || {}
 
-
-     const {fullName,email,username, password}=req.body || {}
-
-   console.log("email: ",email);
+   console.log("Signup Debug - req.body:", req.body);
+   console.log("Extracted fields - fullName:", fullName, "email:", email, "username:", username, "password:", password);
+    
+   if(!req.body || [fullName,email,username,password].some((field)=>field?.trim()===""))
+   {
+       throw new ApiError(400,"All fields are required")
+   }
     
    if(!req.body || [fullName,email,username,password].some((field)=>field?.trim()===""))
    {
@@ -125,24 +120,29 @@ const loginUser= asyncHandler(async(req, res)=> {
   }
   
   const isPasswordValid = await user.isPasswordCorrect(password)
+  console.log("Login Debug - password from request:", password);
+  console.log("Login Debug - password from DB exists:", !!user.password);
+  console.log("Login Debug - isPasswordValid:", isPasswordValid);
   if (!isPasswordValid) {
     throw new ApiError(401, "Invalid credentials")
   }
 
-  const {accessToken,refreshToken} = await generatAccessAndRefreshTokens(user._id)
+  const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id)
 
   const loogedInUser = await User.findById(user._id).select("-password -refreshToken")
 
-  const options = {
+  const isProduction = process.env.NODE_ENV === "production";
+  const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
   }
 
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
     .json(
       new ApiResponse(
         200,
@@ -166,22 +166,24 @@ const logoutUser= asyncHandler(async(req,res)=> {
   new: true
 })
 
-  const options = {
+  const isProduction = process.env.NODE_ENV === "production";
+  const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
+    path: "/",
   }
 
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessToken", cookieOptions)
+    .clearCookie("refreshToken", cookieOptions)
     .json(new ApiResponse(200, {}, "user logged out"))
 
 })
 
 const refreshAccessToken =  asyncHandler(async(req,res)=>{
-  const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+  const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken
 
   if(!incomingRefreshToken){
     throw new ApiError(400, "unauthorized request")
@@ -199,22 +201,21 @@ const refreshAccessToken =  asyncHandler(async(req,res)=>{
     if(incomingRefreshToken !== user?.refreshToken){
       throw new ApiError(401,"Refresh token is expired or used")
     }
-      const options = {
-        httpOnly: true,
-        secure: true
-      }
-      // const options = {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV === "production",
-      //   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
-      // }
-     
-       const {accessToken, newRefreshToken} = await generatAccessAndRefreshTokens(user._id)
-  
+
+    const isProduction = process.env.NODE_ENV === "production";
+    const cookieOptions = {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      path: "/",
+    }
+
+    const {accessToken, newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
+
        return res
        .status(200)
-       .cookie("accessToken",accessToken, options)
-       .cookie("refreshToken",newRefreshToken, options)
+       .cookie("accessToken", accessToken, cookieOptions)
+       .cookie("refreshToken", newRefreshToken, cookieOptions)
        .json(
         new ApiResponse(200, 
           {
@@ -249,11 +250,11 @@ const changeCurrentPassword = asyncHandler(async(req,res)=>{
   .json(new ApiResponse(200, {},"Password changed successfully"))
 })
 
-const getCurrentUser =asyncHandler(async(req,res)=>{
+const getCurrentUser = asyncHandler(async (req, res) => {
   return res
-  .status(200)
-  .json(200, req.user, "current user fetched successfully")
-})
+    .status(200)
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+});
 
 const updateAccountDetails=asyncHandler(async(req ,res)=>{
    const {fullName, email}=req.body
@@ -355,27 +356,27 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
     },
     {
       $lookup : {
-        from: "subscription",
+        from: "subscriptions",
         localField:"_id",
         foreignField:"channel",
-        as:"subscibers"
+        as:"subscribers"
       }
     },
     {
       $lookup : {
-        from: "subscription",
+        from: "subscriptions",
         localField:"_id",
-        foreignField:"subsciber",
-        as:"subscibedTo"
+        foreignField:"subscriber",
+        as:"subscribedTo"
       }
     },
     {
       $addFields:{
         subscribersCount:{
-          $size:"$subscibers"
+          $size:"$subscribers"
         },
         channelsSubscribedToCount:{
-          $size:"$subscibedTo"
+          $size:"$subscribedTo"
         },
         isSubscribed:{
           $cond:{
