@@ -72,9 +72,9 @@ function Signup() {
     setError("");
 
     const data = new FormData();
-    data.append("fullName", formData.fullName);
-    data.append("email", formData.email);
-    data.append("username", formData.username);
+    data.append("fullName", formData.fullName.trim());
+    data.append("email", formData.email.trim().toLowerCase());
+    data.append("username", formData.username.trim().toLowerCase());
     data.append("password", formData.password);
     data.append("avatar", avatar);
     if (coverImage) data.append("coverImage", coverImage);
@@ -83,7 +83,7 @@ function Signup() {
       const res = await axiosInstance.post("/users/register", data);
 
       if (res.status === 200 || res.status === 201 || res.data?.success) {
-        toast.success("Welcome to the Pulse! Please login.");
+        toast.success("Welcome to the Play Community! Please login.");
         navigate("/login");
       } else {
         const errorMsg = res.data?.message || "Registration failed. Try again.";

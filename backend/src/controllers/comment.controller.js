@@ -24,7 +24,7 @@ const getVideoComments = asyncHandler(async(req ,res) => {
                 as:"owner",
                 pipeline:[{$project :{username :1 , fullName:1,avatar:1}}],
             },
-        },
+        }, 
         {$addFields:{owner : {$first:"$owner"}}},
         {
             $lookup:{
@@ -69,8 +69,7 @@ const addComment = asyncHandler(async(req,res)=>{
 
     if(!isValidObjectId(videoId))throw new ApiError(400,"Invalid videoId");
    
-    const video = await Video.findById(videoId);
-    if(!video)throw new ApiError(404,"Video not found");
+    const video = await Video.findById(videoId);    if(!video)throw new ApiError(404,"Video not found");
 
     const comment = await Comment.create({
         content,

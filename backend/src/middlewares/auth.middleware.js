@@ -26,7 +26,7 @@ export const verifyJWT = asyncHandler(async (req, _, next) => {
     throw new ApiError(401, "Invalid access token");
   }
 });
-
+ 
 export const optionalVerifyJWT = asyncHandler(async (req, _, next) => {
   try {
     const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");

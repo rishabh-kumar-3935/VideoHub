@@ -87,36 +87,36 @@ function Header() {
     <>
       <header className="h-20 bg-[#050505]/80 backdrop-blur-md border-b border-white/5 fixed top-0 left-0 w-full z-[100] px-4 md:px-8 flex items-center justify-between gap-4">
         <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
-        
+
         {/* 1. Logo Section */}
         <Link to='/' className='flex items-center gap-3 shrink-0 h-12'>
-            <div className="relative w-10 h-10 flex items-center justify-center">
-  <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">
-    <defs>
-      <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%"  />
-        <stop offset="100%" stopColor="#1ca332" />
-      </linearGradient>
-    </defs>
-    <circle cx="50" cy="50" r="44" fill="url(#greenGrad)" />
-    <path
-      d="M38 30 L68 50 L38 70 Z"
-      fill="white"
-      transform="translate(-2 0)"
-    />
-    <path
-      d="M55 28 L55 72"
-      stroke="white"
-      strokeWidth="8"
-      strokeLinecap="round"
-    />
-  </svg>
-</div>
-            <div className='hidden sm:flex flex-col justify-center'> 
-                <h1 className='text-[20px] font-black tracking-tighter leading-none text-white'>
-                    PLAY<span className='text-green-500 ml-1'>COMMUNITY</span>
-                </h1>
-            </div>
+          <div className="relative w-10 h-10 flex items-center justify-center">
+            <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+              <defs>
+                <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" />
+                  <stop offset="100%" stopColor="#1ca332" />
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="44" fill="url(#greenGrad)" />
+              <path
+                d="M38 30 L68 50 L38 70 Z"
+                fill="white"
+                transform="translate(-2 0)"
+              />
+              <path
+                d="M55 28 L55 72"
+                stroke="white"
+                strokeWidth="8"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+          <div className='hidden sm:flex flex-col justify-center'>
+            <h1 className='text-[20px] font-black tracking-tighter leading-none text-white'>
+              PLAY<span className='text-green-500 ml-1'>COMMUNITY</span>
+            </h1>
+          </div>
         </Link>
 
         {/* 2. Desktop Search */}
@@ -177,7 +177,7 @@ function Header() {
 
               {/* Profile Avatar */}
               <Link to="/dashboard" className="shrink-0 active:scale-90 transition-transform">
-                <img src={getSecureUrl(userData?.avatar)} className="w-10 h-10 rounded-2xl object-cover border-2 border-white/5 hover:border-blue-500/50 shadow-md"/>
+                <img src={getSecureUrl(userData?.avatar)} className="w-10 h-10 rounded-2xl object-cover border-2 border-white/5 hover:border-blue-500/50 shadow-md" />
               </Link>
 
               {/* Logout Component */}

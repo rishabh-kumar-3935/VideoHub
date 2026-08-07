@@ -1,36 +1,50 @@
-import express from "express"
-import cookieParser from "cookie-parser"
- 
-const app = express();
+  import express from "express"
+  import cookieParser from "cookie-parser"
+  
+  const app = express();
 
-const allowedOrigins = process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) || [];
-const isOriginAllowed = (origin) => {
-  if (!origin) return false;
-  const normalizedOrigin = origin.trim();
-  const isLocalhostOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin);
-  return allowedOrigins.includes(normalizedOrigin) || isLocalhostOrigin;
-};
+  const allowedOrigins = [
+    ...new Set([
+      ...(process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) || []),
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "http://localhost:5174",
+      "http://127.0.0.1:5174",
+      "http://localhost:5175",
+      "http://127.0.0.1:5175",
+      "http://localhost:5176",
+      "http://127.0.0.1:5176",
+      "http://localhost:5177",
+      "http://127.0.0.1:5177"
+    ])
+  ];
+  const isOriginAllowed = (origin) => {
+    if (!origin) return false;
+    const normalizedOrigin = origin.trim();
+    const isLocalhostOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin);
+    return allowedOrigins.includes(normalizedOrigin) || isLocalhostOrigin;
+  };
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (origin && isOriginAllowed(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization,Accept,Origin,X-Requested-With");
-  }
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && isOriginAllowed(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+      res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+      res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization,Accept,Origin,X-Requested-With");
+    }
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(200);
+    }
 
-  next();
-});
+    next();
+  });
 
-app.use(express.json({limit: "50kb"}))
-app.use(express.urlencoded({ extended: true, limit: "50kb" }))
-app.use(express.static("public"))
-app.use(cookieParser())
+  app.use(express.json({limit: "50kb"}))
+  app.use(express.urlencoded({ extended: true, limit: "50kb" }))
+  app.use(express.static("public"))
+  app.use(cookieParser())
 
 //routes import
 
