@@ -1,7 +1,7 @@
 import { WatchHistory } from "../models/watchHistory.model.js";
-import { ApiError } from "../utils/apiError.js";
+import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 // Add video to watch history
 const addToWatchHistory = asyncHandler(async (req, res) => {
