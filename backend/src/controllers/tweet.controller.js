@@ -1,8 +1,8 @@
 import mongoose, { isValidObjectId } from "mongoose"
 import { Tweet } from "../models/tweet.model.js"
-import { ApiError } from '../utils/apiError.js'
+import { ApiError } from '../utils/ApiError.js'
 import { asyncHandler } from '../utils/asyncHandler.js'
-import { ApiResponse } from '../utils/apiResponse.js'
+import { ApiResponse } from '../utils/ApiResponse.js'
 import { uploadOnCloudinary } from '../utils/cloudinary.js'
 import { v2 as cloudinary } from "cloudinary" 
 import { Like } from "../models/like.model.js";

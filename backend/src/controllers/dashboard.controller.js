@@ -5,8 +5,8 @@ import { Like } from "../models/like.model.js";
 import { Comment } from "../models/comment.model.js";
 import { Notification } from "../models/notification.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiResponse } from "../utils/apiResponse.js";
-import { ApiError } from "../utils/apiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 
 const getDashboardDate= asyncHandler(async(req , res)=>{
     const userId = req.user?._id;

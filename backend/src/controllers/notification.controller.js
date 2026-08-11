@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { Notification } from "../models/notification.model.js";
 import { Video } from "../models/video.model.js";
 import { Comment } from "../models/comment.model.js"; 
