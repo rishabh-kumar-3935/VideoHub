@@ -5,8 +5,10 @@ export const getSecureUrl=(url)=>{
 };
 const axiosInstance=axios.create({
     baseURL:import.meta.env.VITE_BACKEND_URL ,
+    
     withCredentials:true,
 });
+console.log(baseURL);
 
 axiosInstance.interceptors.response.use(
     (response)=>response,
