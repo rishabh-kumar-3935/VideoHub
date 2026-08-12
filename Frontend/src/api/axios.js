@@ -8,7 +8,7 @@ const axiosInstance=axios.create({
     
     withCredentials:true,
 });
-console.log(baseURL);
+
 
 axiosInstance.interceptors.response.use(
     (response)=>response,
