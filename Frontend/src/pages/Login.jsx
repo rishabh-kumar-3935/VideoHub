@@ -49,7 +49,7 @@ function Login() {
                 <div className="flex flex-col items-center mb-10 text-center relative z-10">
                     <div className='relative w-16 h-16 flex items-center justify-center mb-4'>
                         {/* Background Soft Glow */}
-                        <div className='absolute inset-0 bg-blue-600 rounded-2xl blur-xl opacity-30'></div>
+                        <div className='absolute inset-0 bg-white/30 rounded-2xl blur-xl opacity-30'></div>
 
                         {/* The Icon: Abstract Play + Pulse P (Geometric Design) */}
                         <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">
